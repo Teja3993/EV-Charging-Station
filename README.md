@@ -1,6 +1,5 @@
 # California EV Charging Station: Predictive Analysis & Geospatial Insights
 
-![EV Charging Station Banner](https://as2.ftcdn.net/jpg/05/81/58/11/1000_F_581581163_UentU7SFAleSjO4dFt58rUN6Xj0nMoDm.webp)
 
 ## 📖 Overview
 
