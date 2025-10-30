@@ -51,8 +51,8 @@ The final model is a **Random Forest Regressor** with its default hyperparameter
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/your-username/your-repo-name.git](https://github.com/your-username/your-repo-name.git)
-    cd your-repo-name
+    git clone [https://github.com/Teja3993/EV-Charging-Station.git](https://github.com/Teja3993/EV-Charging-Station.git)
+    cd EV-Charging-Station
     ```
 2.  **Create and activate a virtual environment:**
     ```bash
