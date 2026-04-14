@@ -1,23 +1,20 @@
-# EV Charging Demand Forecast: A Time-Series ML Project
-
+# ⚡ Grid-Aware EV Charging Demand Forecasting
 
 ## 📖 Overview
+This repository contains a machine learning pipeline that predicts future hourly Electric Vehicle (EV) charging demand in kilowatts (kW). 
 
-This project presents an end-to-end machine learning workflow to forecast Electric Vehicle (EV) charging demand using a time-series dataset from California. The primary goal was to analyze historical data, engineer relevant features, and build a highly accurate predictive model.
+Unlike standard time-series models that rely solely on historical clock patterns, this model is **"grid-aware."** It factors in real-time power grid conditions, such as carbon intensity and renewable energy availability, to make its predictions. This repository serves as a portfolio piece and the foundation for a technical research paper.
 
-The project documents a complete journey from raw data to a robust, production-ready model, including a comprehensive investigation and resolution of data leakage issues inherent in the synthetic dataset. This repository serves as a portfolio piece and a potential foundation for a conference paper.
+## 🛠️ Data Engineering & Leakage Resolution
+The model is built on a California charging station dataset. A major focus of this project was debugging data leakage to ensure the model reflects a strict, real-world deployment scenario.
 
----
+* **Identifying Leaks:** Initial baseline models produced artificially high scores. Through feature importance analysis and decision tree visualization, target-dependent variables were identified and removed (e.g., `Peak Demand (kW)`, `Number of EVs Charging`, `Grid Stability Index`).
+* **Temporal Feature Engineering:** Created 1-hour and 24-hour demand lag features, and converted the hour of the day into cyclical sine/cosine variables to capture daily charging rhythms.
 
-## 📌 Project Status: ✅ Complete
+## 🏆 Model Performance
+Three regression models (Linear Regression, XGBoost, and Random Forest) were tested and validated using a 5-fold `TimeSeriesSplit` to prevent the models from looking ahead in time. 
 
-The project has been completed through all phases: data exploration, feature engineering, modeling, hyperparameter tuning, and final evaluation.
-
----
-
-## 🏆 Final Model Performance
-
-The champion model, a `RandomForestRegressor`, demonstrated exceptional performance on the unseen hold-out test set.
+The champion model, a **RandomForestRegressor**, demonstrated exceptional performance on the unseen hold-out test set:
 
 | Metric | Score | Interpretation |
 | :--- | :--- | :--- |
@@ -25,27 +22,19 @@ The champion model, a `RandomForestRegressor`, demonstrated exceptional performa
 | **MAE** (Mean Absolute Error) | **0.0107 kW** | On average, the model's prediction is off by only 0.01 kW. |
 | **R-squared ($R^2$)** | **0.9777** | The model successfully explains **97.8%** of the variance in charging demand. |
 
----
+## 🧠 Key Insights (Feature Importance)
+A SHAP/Feature Importance analysis proved that the model successfully learned grid dynamics rather than just memorizing the clock. The top three predictors for EV charging demand were:
+1. **Carbon Emissions ($kgCO_2/kWh$)**
+2. **Previous Hour Demand (lag_1hr)**
+3. **Renewable Energy Usage (%)**
 
-## 🧠 Model Architecture & Key Insights
+This establishes a strong, quantifiable relationship between user charging behaviors and the active state of the power grid.
 
-The final model is a **Random Forest Regressor** with its default hyperparameters, as extensive tuning confirmed these were optimal. A Random Forest is an ensemble learning method that operates by constructing a multitude of decision trees at training time and outputting the mean prediction of the individual trees.
-
-### Key Success Factors:
-
-1.  **Feature Engineering:** The most critical factor for the model's success was the creation of time-based features. The feature importance plot confirms that the model relied most heavily on **`demand_lag_24hr`**, **`demand_lag_1hr`**, and the cyclical **`hour_sin`/`hour_cos`** features. This proves that understanding the data's inherent patterns was crucial.
-2.  **Data Leakage Debugging:** A significant portion of the project involved identifying and systematically removing "leaky" features from the synthetic dataset. This process, using feature importance and tree visualization, was essential for building a model that learned real patterns instead of "cheating."
-3.  **Model Selection:** The Random Forest's ability to capture complex, non-linear relationships allowed it to significantly outperform simpler models like Linear Regression.
-
----
-
-## 🛠️ Technology Stack
-
+## 💻 Technology Stack
 * **Language:** Python 3.10+
-* **Core Libraries:** Pandas, NumPy, Scikit-learn, Matplotlib, Seaborn, XGBoost
-* **Environment:** JupyterLab, Git
-
----
+* **Machine Learning:** Scikit-Learn, XGBoost
+* **Data Processing:** Pandas, NumPy
+* **Visualization:** Matplotlib, Seaborn
 
 ## 🚀 Getting Started
 
@@ -62,9 +51,8 @@ The final model is a **Random Forest Regressor** with its default hyperparameter
     ```
 3.  **Install dependencies:**
     ```bash
-    pip install -r requirements.txt
+    pip install pandas numpy scikit-learn xgboost matplotlib seaborn
     ```
-4.  **Launch JupyterLab to view the notebook:**
-    ```bash
-    jupyter lab
-    ```
+4.  **Run the pipeline:**
+    * Execute the data merging script to combine the raw CSV files.
+    * Launch JupyterLab to view the modeling notebook, preprocessing steps, and final evaluation plots.
